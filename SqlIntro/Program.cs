@@ -12,13 +12,13 @@ namespace SqlIntro
 
             Product product = null;
 
-            foreach (var prod in repo.GetProducts())
+            foreach (var prod in repo.GetProductsWithReview())
             {
                 if (product == null)
                 {
                     product = prod;
                 }
-                Console.WriteLine("Product Name:" + prod.Name);
+                Console.WriteLine($"Product Name: {prod.Name} {prod.Rating}");
             }
 
             //TODO: Refactor testing for database functionality

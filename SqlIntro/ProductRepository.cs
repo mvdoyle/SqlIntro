@@ -32,7 +32,7 @@ namespace SqlIntro
                 while (dr.Read())
                 {
                     yield return new Product { Name = dr["Name"].ToString() };
-                    // add yield return here for Id
+                    //TODO: add yield return here for Id
                 }
             }
         }

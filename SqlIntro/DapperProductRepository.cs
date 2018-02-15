@@ -68,5 +68,14 @@ namespace SqlIntro
                 conn.Execute("INSERT INTO product (name) values(@name)", new { name = prod.Name });
             }
         }
+
+        public IEnumerable<Product> GetProductsWithReview()
+        {
+            using (var conn = new MySqlConnection(_connectionString))
+            {
+                conn.Open();
+                return conn.Query<Product>("SELECT p.Name, pr.Rating FROM product AS p INNER JOIN productreview pr ON pr.ProductID = p.ProductID;");
+            }
+        }
     }
 }
