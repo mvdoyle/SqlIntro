@@ -34,7 +34,5 @@ namespace SqlIntro
 
             Console.ReadLine();
         }
-
-
     }
 }
