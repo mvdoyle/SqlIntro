@@ -26,7 +26,7 @@ namespace SqlIntro
             using (var conn = new MySqlConnection(_connectionString))
             {
                 conn.Open();
-                return conn.Query<Product>("select Name from product");
+                return conn.Query<Product>("SELECT Name FROM product");
             }
         }
 
@@ -39,7 +39,7 @@ namespace SqlIntro
             using (var conn = new MySqlConnection(_connectionString))
             {
                 conn.Open();
-                conn.Execute("delete from product where productid = @id", new { id });
+                conn.Execute("DELETE FROM product WHERE productid = @id", new { id });
             }
         }
         /// <summary>
@@ -65,7 +65,7 @@ namespace SqlIntro
             using (var conn = new MySqlConnection(_connectionString))
             {
                 conn.Open();
-                conn.Execute("INSERT into product (name) values(@name)", new { name = prod.Name });
+                conn.Execute("INSERT INTO product (name) values(@name)", new { name = prod.Name });
             }
         }
     }
