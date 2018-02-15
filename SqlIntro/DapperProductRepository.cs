@@ -68,13 +68,28 @@ namespace SqlIntro
                 conn.Execute("INSERT INTO product (name) values(@name)", new { name = prod.Name });
             }
         }
-
+        /// <summary>
+        /// Reads all the products from the products table that have a review
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<Product> GetProductsWithReview()
         {
             using (var conn = new MySqlConnection(_connectionString))
             {
                 conn.Open();
                 return conn.Query<Product>("SELECT p.Name, pr.Rating FROM product AS p INNER JOIN productreview pr ON pr.ProductID = p.ProductID;");
+            }
+        }
+        /// <summary>
+        /// Reads all the products from the products table and the reviews, regardless of whether they have a review
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<Product> GetProductsAndReview()
+        {
+            using (var conn = new MySqlConnection(_connectionString))
+            {
+                conn.Open();
+                return conn.Query<Product>("SELECT p.Name, pr.Rating FROM product AS p LEFT JOIN productreview pr ON pr.ProductID = p.ProductID;");
             }
         }
     }
