@@ -24,9 +24,10 @@ namespace SqlIntro
         public IEnumerable<Product> GetProducts()
         {
             using (var conn = new MySqlConnection(_connectionString))
-            {
+            { 
+                conn.Open();
                 var cmd = conn.CreateCommand();
-                cmd.CommandText = ""; //TODO:  Write a SELECT statement that gets all products
+                cmd.CommandText = "select * from product"; //TODO:  Write a SELECT statement that gets all products
                 var dr = cmd.ExecuteReader();
                 while (dr.Read())
                 {
@@ -44,7 +45,8 @@ namespace SqlIntro
             using (var conn = new MySqlConnection(_connectionString))
             {
                 var cmd = conn.CreateCommand();
-                cmd.CommandText = ""; //Write a delete statement that deletes by id
+                cmd.CommandText = "delete * from product where id = @id"; //Write a delete statement that deletes by id
+                cmd.Parameters.AddWithValue("@ProductId", id);
                 cmd.ExecuteNonQuery();
             }
         }
