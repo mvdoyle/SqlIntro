@@ -24,7 +24,7 @@ namespace SqlIntro
         public IEnumerable<Product> GetProducts()
         {
             using (var conn = new MySqlConnection(_connectionString))
-            { 
+            {
                 conn.Open();
                 var cmd = conn.CreateCommand();
                 cmd.CommandText = "select Name from product";

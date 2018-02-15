@@ -16,6 +16,7 @@ namespace SqlIntro
         {
             _connectionString = connectionString;
         }
+
         /// <summary>
         /// Reads all the products from the products table
         /// </summary>
@@ -52,7 +53,7 @@ namespace SqlIntro
             using (var conn = new MySqlConnection(_connectionString))
             {
                 conn.Open();
-                conn.Execute("UPDATE product SET name = @name WHERE ProductId = @id", new {name = prod.Name, id = prod.Id});
+                conn.Execute("UPDATE product SET name = @name WHERE ProductId = @id", new { name = prod.Name, id = prod.Id });
             }
         }
         /// <summary>
@@ -64,7 +65,7 @@ namespace SqlIntro
             using (var conn = new MySqlConnection(_connectionString))
             {
                 conn.Open();
-                conn.Execute("INSERT into product (name) values(@name)", new {name = prod.Name});
+                conn.Execute("INSERT into product (name) values(@name)", new { name = prod.Name });
             }
         }
     }
