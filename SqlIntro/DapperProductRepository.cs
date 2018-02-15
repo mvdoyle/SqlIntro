@@ -1,19 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
+using Dapper;
 
 namespace SqlIntro
 {
-    public class ProductRepository : IProductRepository
+    public class DapperProductRepository : IProductRepository
     {
         private readonly string _connectionString;
 
-        public ProductRepository(string connectionString)
+        public DapperProductRepository(string connectionString)
         {
             _connectionString = connectionString;
         }
@@ -24,16 +23,9 @@ namespace SqlIntro
         public IEnumerable<Product> GetProducts()
         {
             using (var conn = new MySqlConnection(_connectionString))
-            { 
+            {
                 conn.Open();
-                var cmd = conn.CreateCommand();
-                cmd.CommandText = "select Name from product";
-                var dr = cmd.ExecuteReader();
-                while (dr.Read())
-                {
-                    yield return new Product { Name = dr["Name"].ToString() };
-                    // add yield return here for Id
-                }
+                return conn.Query<Product>("select Name from product");
             }
         }
 
@@ -46,10 +38,7 @@ namespace SqlIntro
             using (var conn = new MySqlConnection(_connectionString))
             {
                 conn.Open();
-                var cmd = conn.CreateCommand();
-                cmd.CommandText = "delete from product where productid = @id";
-                cmd.Parameters.AddWithValue("@id", id);
-                cmd.ExecuteNonQuery();
+                conn.Execute("delete from product where productid = @id", new { id });
             }
         }
         /// <summary>
@@ -63,11 +52,7 @@ namespace SqlIntro
             using (var conn = new MySqlConnection(_connectionString))
             {
                 conn.Open();
-                var cmd = conn.CreateCommand();
-                cmd.CommandText = "UPDATE product SET name = @name WHERE ProductId = @id";
-                cmd.Parameters.AddWithValue("@name", prod.Name);
-                cmd.Parameters.AddWithValue("@id", prod.Id);
-                cmd.ExecuteNonQuery();
+                conn.Execute("UPDATE product SET name = @name WHERE ProductId = @id", new {name = prod.Name, id = prod.Id});
             }
         }
         /// <summary>
