@@ -32,7 +32,7 @@ namespace SqlIntro
                 while (dr.Read())
                 {
                     yield return new Product { Name = dr["Name"].ToString() };
-                    //TODO: add yield return here for Id
+                    yield return new Product {Id = (int) dr["Id"]};
                 }
             }
         }
@@ -85,5 +85,39 @@ namespace SqlIntro
                 cmd.ExecuteNonQuery();
             }
         }
+
+        public IEnumerable<Product> GetProductsWithReview()
+        {
+            using (var conn = new MySqlConnection(_connectionString))
+            {
+                conn.Open();
+                var cmd = conn.CreateCommand();
+                cmd.CommandText = "SELECT p.Name, pr.Rating FROM product AS p INNER JOIN productreview pr ON pr.ProductID = p.ProductID;";
+                var dr = cmd.ExecuteReader();
+                while (dr.Read())
+                {
+
+                    yield return new Product { Name = dr["Name"].ToString(), Rating = (int?)dr["Rating"] ?? 0 };
+                }
+            }
+        }
+        /// <summary>
+        /// Reads all the products from the products table and the reviews, regardless of whether they have a review
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<Product> GetProductsAndReview()
+        {
+            using (var conn = new MySqlConnection(_connectionString))
+            {
+                conn.Open();
+                var cmd = conn.CreateCommand();
+                cmd.CommandText = "SELECT p.Name, pr.Rating FROM product AS p LEFT JOIN productreview pr ON pr.ProductID = p.ProductID;";
+                var dr = cmd.ExecuteReader();
+                while (dr.Read())
+                {
+                    yield return new Product {Name = dr["Name"].ToString(), Rating =(int) dr["Rating"]};
+                }
+            }
+        }  
     }
 }
