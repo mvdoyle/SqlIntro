@@ -9,9 +9,8 @@ namespace SqlIntro
         static void Main(string[] args)
         {
             var connectionString = ConfigurationManager.ConnectionStrings["AdventureWorks"].ConnectionString;
-            var repo = new DapperProductRepository(connectionString);
             var connection = new MySqlConnection(connectionString);
-            var productRepo = new ProductRepository(connection);
+            var repo = new ProductRepository(connection);
 
             Product product = null;
             

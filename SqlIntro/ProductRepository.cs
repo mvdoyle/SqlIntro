@@ -95,8 +95,7 @@ namespace SqlIntro
                 var dr = cmd.ExecuteReader();
                 while (dr.Read())
                 {
-
-                    yield return new Product { Name = dr["Name"].ToString(), Rating = (int?)dr["Rating"] ?? 0 };
+                    yield return new Product { Name = dr["Name"].ToString(), Rating = dr["Rating"] as int? ?? 0 };
                 }
             }
         }
@@ -114,7 +113,7 @@ namespace SqlIntro
                 var dr = cmd.ExecuteReader();
                 while (dr.Read())
                 {
-                    yield return new Product {Name = dr["Name"].ToString(), Rating =(int?) dr["Rating"] ?? 0};
+                    yield return new Product {Name = dr["Name"].ToString(), Rating = dr["Rating"] as int? ?? 0 };
                 }
             }
         }  
