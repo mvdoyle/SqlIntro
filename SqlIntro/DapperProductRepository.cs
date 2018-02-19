@@ -78,7 +78,7 @@ namespace SqlIntro
             {
                 conn.Open();
                 return conn.Query<Product>("SELECT p.Name, pr.Rating FROM product AS p INNER JOIN productreview pr ON pr.ProductID = p.ProductID;");
-            }
+            } 
         }
         /// <summary>
         /// Reads all the products from the products table and the reviews, regardless of whether they have a review

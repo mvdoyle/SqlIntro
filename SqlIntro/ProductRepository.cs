@@ -1,21 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
-using MySql.Data.MySqlClient;
 
 namespace SqlIntro
 {
     public class ProductRepository : IProductRepository
     {
-        private readonly string _connectionString;
+        private readonly IDbConnection _conn;
 
-        public ProductRepository(string connectionString)
+        public ProductRepository(IDbConnection conn)
         {
-            _connectionString = connectionString;
+            _conn = conn;
         }
         /// <summary>
         /// Reads all the products from the products table
@@ -23,7 +23,7 @@ namespace SqlIntro
         /// <returns></returns>
         public IEnumerable<Product> GetProducts()
         {
-            using (var conn = new MySqlConnection(_connectionString))
+            using (var conn = _conn)
             {
                 conn.Open();
                 var cmd = conn.CreateCommand();
@@ -31,8 +31,7 @@ namespace SqlIntro
                 var dr = cmd.ExecuteReader();
                 while (dr.Read())
                 {
-                    yield return new Product { Name = dr["Name"].ToString() };
-                    yield return new Product {Id = (int) dr["Id"]};
+                    yield return new Product { Name = dr["Name"].ToString(), Id = (int)dr["Id"] };
                 }
             }
         }
@@ -43,12 +42,12 @@ namespace SqlIntro
         /// <param name="id"></param>
         public void DeleteProduct(int id)
         {
-            using (var conn = new MySqlConnection(_connectionString))
+            using (var conn = _conn)
             {
                 conn.Open();
                 var cmd = conn.CreateCommand();
                 cmd.CommandText = "delete from product where productid = @id";
-                cmd.Parameters.AddWithValue("@id", id);
+                cmd.AddWithValue("@id", id);
                 cmd.ExecuteNonQuery();
             }
         }
@@ -60,13 +59,13 @@ namespace SqlIntro
         {
             //This is annoying and unnecessarily tedious for large objects.
             //More on this in the future...  Nothing to do here..
-            using (var conn = new MySqlConnection(_connectionString))
+            using (var conn = _conn)
             {
                 conn.Open();
                 var cmd = conn.CreateCommand();
                 cmd.CommandText = "UPDATE product SET name = @name WHERE ProductId = @id";
-                cmd.Parameters.AddWithValue("@name", prod.Name);
-                cmd.Parameters.AddWithValue("@id", prod.Id);
+                cmd.AddWithValue("@name", prod.Name);
+                cmd.AddWithValue("@id", prod.Id);
                 cmd.ExecuteNonQuery();
             }
         }
@@ -76,19 +75,19 @@ namespace SqlIntro
         /// <param name="prod"></param>
         public void InsertProduct(Product prod)
         {
-            using (var conn = new MySqlConnection(_connectionString))
+            using (var conn = _conn)
             {
                 conn.Open();
                 var cmd = conn.CreateCommand();
                 cmd.CommandText = "INSERT into product (name) values(@name)";
-                cmd.Parameters.AddWithValue("@name", prod.Name);
+                cmd.AddWithValue("@name", prod.Name);
                 cmd.ExecuteNonQuery();
             }
         }
 
         public IEnumerable<Product> GetProductsWithReview()
         {
-            using (var conn = new MySqlConnection(_connectionString))
+            using (var conn = _conn)
             {
                 conn.Open();
                 var cmd = conn.CreateCommand();
@@ -107,7 +106,7 @@ namespace SqlIntro
         /// <returns></returns>
         public IEnumerable<Product> GetProductsAndReview()
         {
-            using (var conn = new MySqlConnection(_connectionString))
+            using (var conn = _conn)
             {
                 conn.Open();
                 var cmd = conn.CreateCommand();
