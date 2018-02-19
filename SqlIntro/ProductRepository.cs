@@ -114,7 +114,7 @@ namespace SqlIntro
                 var dr = cmd.ExecuteReader();
                 while (dr.Read())
                 {
-                    yield return new Product {Name = dr["Name"].ToString(), Rating =(int) dr["Rating"]};
+                    yield return new Product {Name = dr["Name"].ToString(), Rating =(int?) dr["Rating"] ?? 0};
                 }
             }
         }  
